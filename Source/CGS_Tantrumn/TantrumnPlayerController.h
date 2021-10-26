@@ -24,10 +24,18 @@ public:
 public:
     void SetupInputComponent() override;
 
-    void OnJump();
     void OnMoveForward(float value);
     void OnMoveRight(float value);
     void OnLookUp(float value);
     void OnLookRight(float value);
+
+    void OnJump();
+    void OnStopJump();
+
+    void OnCrouchDown();
+    void OnCrouchUp();
+
+    void OnSprint();
+    void OnStopSprint();
 
 };
