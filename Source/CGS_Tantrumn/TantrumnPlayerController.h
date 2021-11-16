@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "TantrumnPlayerController.generated.h"
 
+class ATantrumnGameModeBase;
+
 /**
  *
  */
@@ -21,7 +23,13 @@ public:
     UPROPERTY();
     float yaw_scale = 90.0f;
 
+private:
+    ATantrumnGameModeBase* game_mode_ref_;
+
 public:
+    virtual void BeginPlay() override;
+
+protected:
     void SetupInputComponent() override;
 
     void OnMoveForward(float value);
@@ -37,5 +45,8 @@ public:
 
     void OnSprint();
     void OnStopSprint();
+
+private:
+    bool IsGameStatePlaying();
 
 };

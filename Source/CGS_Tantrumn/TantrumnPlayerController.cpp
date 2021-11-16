@@ -5,6 +5,17 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "TantrumnGameModeBase.h"
+#include "TantrumnCharacter.h"
+
+
+void ATantrumnPlayerController::BeginPlay()
+{
+    Super::BeginPlay();
+
+    game_mode_ref_ = Cast<ATantrumnGameModeBase>(GetWorld()->GetAuthGameMode());
+}
+
 void ATantrumnPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
@@ -28,7 +39,8 @@ void ATantrumnPlayerController::SetupInputComponent()
 
 void ATantrumnPlayerController::OnMoveForward(float value)
 {
-    if (value)
+    bool is_playing = IsGameStatePlaying();
+    if (is_playing && value)
     {
         auto rotation = GetControlRotation();
         GetPawn()->AddMovementInput(FRotationMatrix(rotation).GetScaledAxis(EAxis::X), value);
@@ -37,7 +49,8 @@ void ATantrumnPlayerController::OnMoveForward(float value)
 
 void ATantrumnPlayerController::OnMoveRight(float value)
 {
-    if (value)
+    bool is_playing = IsGameStatePlaying();
+    if (is_playing && value)
     {
         auto rotation = GetControlRotation();
         GetPawn()->AddMovementInput(FRotationMatrix(rotation).GetScaledAxis(EAxis::Y), value);
@@ -56,42 +69,59 @@ void ATantrumnPlayerController::OnLookRight(float value)
 
 void ATantrumnPlayerController::OnJump()
 {
-    auto character = GetCharacter();
+    bool is_playing = IsGameStatePlaying();
+    if (!is_playing)
+        return;
+
+    const auto character = GetCharacter();
     if (character)
         character->Jump();
 }
 
 void ATantrumnPlayerController::OnStopJump()
 {
-    auto character = GetCharacter();
+    const auto character = GetCharacter();
     if (character)
         character->StopJumping();
 }
 
 void ATantrumnPlayerController::OnCrouchDown()
 {
-    auto character = GetCharacter();
+    bool is_playing = IsGameStatePlaying();
+    if (!is_playing)
+        return;
+
+    const auto character = GetCharacter();
     if (character && character->GetMovementComponent()->IsMovingOnGround())
         character->Crouch();
 }
 
 void ATantrumnPlayerController::OnCrouchUp()
 {
-    auto character = GetCharacter();
+    const auto character = GetCharacter();
     if (character)
         character->UnCrouch();
 }
 
 void ATantrumnPlayerController::OnSprint()
 {
-    auto character = GetCharacter();
+    bool is_playing = IsGameStatePlaying();
+    if (!is_playing)
+        return;
+
+    const auto character = GetCharacter();
     if (character)
         character->GetCharacterMovement()->MaxWalkSpeed *= 2.0f;
 }
 
 void ATantrumnPlayerController::OnStopSprint()
 {
-    auto character = GetCharacter();
+    const auto character = GetCharacter();
     if (character)
         character->GetCharacterMovement()->MaxWalkSpeed /= 2.0f;
+}
+
+bool ATantrumnPlayerController::IsGameStatePlaying()
+{
+    return game_mode_ref_ && game_mode_ref_->GetCurrentGameState() == EGameState::Playing;
 }
