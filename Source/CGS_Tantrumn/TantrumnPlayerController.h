@@ -16,15 +16,15 @@ class CGS_TANTRUMN_API ATantrumnPlayerController : public APlayerController
 {
     GENERATED_BODY()
 
-public:
-    UPROPERTY();
-    float pitch_scale = 90.0f;
-
-    UPROPERTY();
-    float yaw_scale = 90.0f;
-
 private:
     ATantrumnGameModeBase* game_mode_ref_;
+
+    float pitch_scale_ = 90.0f;
+    float yaw_scale_ = 90.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Throwable", meta = (AllowPrivateAccess = "true"));
+    bool pulling_throwable_ = false;
+
 
 public:
     virtual void BeginPlay() override;
@@ -45,6 +45,11 @@ protected:
 
     void OnSprint();
     void OnStopSprint();
+
+    void OnPullThrowable();
+    void OnStopPullThrowable();
+
+    void OnThrow();
 
 private:
     bool IsGameStatePlaying();

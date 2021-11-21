@@ -9,21 +9,28 @@
 UCLASS()
 class CGS_TANTRUMN_API ATantrumnCharacter : public ACharacter
 {
-	GENERATED_BODY()
-
-public:
-	// Sets default values for this character's properties
-	ATantrumnCharacter();
+    GENERATED_BODY()
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Throwable");
+    UAnimMontage* throw_montage_;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+    // Sets default values for this character's properties
+    ATantrumnCharacter();
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+protected:
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
+
+public:
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
+
+    // Called to bind functionality to input
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+    UFUNCTION(BlueprintCallable, Category = "Throwable")
+    virtual void PlayThrowMontage();
 
 };
